@@ -18,9 +18,15 @@ public class CocktailController {
 
     // CREATE
     @PostMapping
-    public ResponseEntity<Cocktail> createCocktail(@Valid @RequestBody Cocktail cocktail) {
+    public ResponseEntity<?> createCocktail(@Valid @RequestBody Cocktail cocktail) {
+        if (cocktailRepository.existsByName(cocktail.getName())) {
+            return ResponseEntity
+                    .status(409) // HTTP 409 Conflict
+                    .body("Cocktail with name '" + cocktail.getName() + "' already exists.");
+        }
         return ResponseEntity.ok(cocktailRepository.save(cocktail));
     }
+
 
     // READ ALL
     @GetMapping

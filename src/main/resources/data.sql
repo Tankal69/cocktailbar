@@ -23,12 +23,11 @@ INSERT INTO ingredient (name) VALUES
                                   ('ice');
 
 -- Cocktails
-INSERT INTO cocktail (name, description) VALUES
-                                             ('Margarita', 'A classic Mexican cocktail with tequila, lime, and orange liqueur.'),
-                                             ('Mojito', 'A refreshing Cuban drink made with rum, lime, mint, and soda water.'),
-                                             ('Cosmopolitan', 'A stylish cocktail with vodka, cranberry juice, lime, and triple sec.'),
-                                             ('Long Island Iced Tea', 'A strong cocktail with multiple spirits and cola.'),
-                                             ('Screwdriver', 'A simple and popular drink with vodka and orange juice.');
+INSERT INTO PUBLIC.COCKTAIL (NAME, DESCRIPTION) VALUES ('Margarita', 'Lime and tequila');
+INSERT INTO PUBLIC.COCKTAIL (NAME, DESCRIPTION) VALUES ('Mojito', 'Rum , lime, mint soda');
+INSERT INTO PUBLIC.COCKTAIL (NAME, DESCRIPTION) VALUES ('Cosmopolitan', 'Vodka & cranberry');
+INSERT INTO PUBLIC.COCKTAIL (NAME, DESCRIPTION) VALUES ('Long Island Iced Tea', 'Strong mix + cola');
+INSERT INTO PUBLIC.COCKTAIL (NAME, DESCRIPTION) VALUES ('Screwdriver', 'Vodka + orange juice');
 
 -- Cocktail-Ingredient Relationships using subqueries
 

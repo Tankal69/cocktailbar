@@ -11,22 +11,22 @@ import lombok.Setter;
 @Entity
 @Table(name = "COCKTAIL_INGREDIENT")
 public class CocktailIngredient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @NotNull
-    @Column(name = "COCKTAIL_ID", nullable = false)
-    private Integer cocktailId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "COCKTAIL_ID", nullable = false)
+    private Cocktail cocktail;
 
-    @NotNull
-    @Column(name = "INGREDIENT_ID", nullable = false)
-    private Integer ingredientId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "INGREDIENT_ID", nullable = false)
+    private Ingredient ingredient;
 
     @Size(max = 20)
     @NotNull
     @Column(name = "QUANTITY", nullable = false, length = 20)
     private String quantity;
-
 }
