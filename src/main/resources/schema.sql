@@ -1,41 +1,27 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-08-13 15:17:46.854
+--- Fixed Schema for Cocktail Application
+-- Normalized and corrected by removing circular references and adding missing columns
 
--- Tables
+-- Table: ingredient
+CREATE TABLE ingredient (
+                            id INT GENERATED ALWAYS AS IDENTITY (START WITH 1) PRIMARY KEY,
+                            name VARCHAR(50) NOT NULL
+);
+
 
 -- Table: cocktail
 CREATE TABLE cocktail (
-                          id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
-                          name VARCHAR(20) NOT NULL,
-                          description VARCHAR(20) NOT NULL,
-                          cocktail_ingredient_id INT NOT NULL,
-                          CONSTRAINT cocktail_pk PRIMARY KEY (id)
+                          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                          name VARCHAR(50) NOT NULL,
+                          description VARCHAR(255) NOT NULL
 );
 
--- Table: cocktail_ingredient
+-- Table: cocktail_ingredient (join table)
 CREATE TABLE cocktail_ingredient (
-                                     id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
+                                     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                      cocktail_id INT NOT NULL,
                                      ingredient_id INT NOT NULL,
-                                     quantity VARCHAR(20) NOT NULL,
-                                     CONSTRAINT cocktail_ingredient_pk PRIMARY KEY (id)
+                                     quantity VARCHAR(50) NOT NULL,
+                                     FOREIGN KEY (cocktail_id) REFERENCES cocktail(id) ON DELETE CASCADE,
+                                     FOREIGN KEY (ingredient_id) REFERENCES ingredient(id) ON DELETE CASCADE
 );
 
--- Table: ingredient (fixed typo: was 'indgredient')
-CREATE TABLE ingredient (
-                            id INT GENERATED ALWAYS AS IDENTITY NOT NULL,
-                            cocktail_ingredient_id INT NOT NULL,
-                            CONSTRAINT ingredient_pk PRIMARY KEY (id)
-);
-
--- Foreign keys
-
--- Reference: cocktail -> cocktail_ingredient
-ALTER TABLE cocktail ADD CONSTRAINT cocktail_cocktail_ingredient
-    FOREIGN KEY (cocktail_ingredient_id)
-        REFERENCES cocktail_ingredient (id);
-
--- Reference: ingredient -> cocktail_ingredient
-ALTER TABLE ingredient ADD CONSTRAINT ingredient_cocktail_ingredient
-    FOREIGN KEY (cocktail_ingredient_id)
-        REFERENCES cocktail_ingredient (id);

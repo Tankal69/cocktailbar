@@ -1,4 +1,5 @@
-package eu.itcrafters.myproject;
+package eu.itcrafters.cocktailbar;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
