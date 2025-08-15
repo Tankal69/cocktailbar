@@ -10,14 +10,14 @@ CREATE TABLE ingredient (
 
 -- Table: cocktail
 CREATE TABLE cocktail (
-                          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                          id INT GENERATED ALWAYS AS IDENTITY (START WITH 1) PRIMARY KEY,
                           name VARCHAR(50) NOT NULL,
                           description VARCHAR(255) NOT NULL
 );
 
 -- Table: cocktail_ingredient (join table)
 CREATE TABLE cocktail_ingredient (
-                                     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                     id INT GENERATED ALWAYS AS IDENTITY (START WITH 1) PRIMARY KEY,
                                      cocktail_id INT NOT NULL,
                                      ingredient_id INT NOT NULL,
                                      quantity VARCHAR(50) NOT NULL,
