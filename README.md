@@ -8,8 +8,7 @@ This reference project demonstrates a clean Controller → Repository layering, 
 Use it as the starting point for your IT Crafters Graduation Project.
 
 ---
-
-1. # 📚 **Table of Contents**
+# 📚 **Table of Contents**
 
 - [Description](#description)
 - [Prerequisites](#prerequisites)
@@ -70,22 +69,6 @@ You'll see how layers connect, how to externalize SQL scripts (`schema.sql`, `da
 
 git clone https://github.com/your-org/cocktailbar.git
 cd cocktailbar
-Build & Run (IntelliJ IDEA)
-Open the project in IntelliJ IDEA:
-File ▸ Open… → Select the cocktailbar root folder
-Gradle should auto-import. If not, use the Gradle tool window and click Refresh.
-Run the application:
-Navigate to:
-src/main/java/eu/itcrafters/cocktailbar/CocktailbarApplication.java
-Right-click the file and choose Run 'CocktailbarApplication'
-or click the green ▶︎ icon.
-Verify startup:
-The terminal should show Spring Boot starting on port 8080.
-Visit:
-http://localhost:8080/swagger-ui/index.html
-Stop the server:
-Press Ctrl + F2 (Windows/Linux) or ⌘ + F2 (macOS)
-Or click the red ■ stop button in the Run window
 
 📑 Swagger UI
 
