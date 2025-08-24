@@ -3,36 +3,38 @@ package eu.itcrafters.cocktailbar.controller;
 import eu.itcrafters.cocktailbar.persistence.Ingredient;
 import eu.itcrafters.cocktailbar.persistence.IngredientRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ingredients")
 public class IngredientController {
 
-    @Autowired
     private IngredientRepository ingredientRepository;
 
-    // CREATE
     @PostMapping
-    public ResponseEntity<?> createIngredient(@Valid @RequestBody Ingredient ingredient) {
+    public ResponseEntity<Object> createIngredient(@Valid @RequestBody Ingredient ingredient) {
         if (ingredientRepository.existsByName(ingredient.getName())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Ingredient '" + ingredient.getName() + "' already exists.");
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Ingredient '" + ingredient.getName() + "' already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
-        return ResponseEntity.ok(ingredientRepository.save(ingredient));
+
+        Ingredient savedIngredient = ingredientRepository.save(ingredient);
+        URI location = URI.create("/ingredients/" + savedIngredient.getId());
+
+        return ResponseEntity.created(location).body(savedIngredient);
     }
 
-    // READ ALL
     @GetMapping
     public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
     }
 
-    // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getIngredientById(@PathVariable Integer id) {
         return ingredientRepository.findById(id)
@@ -40,7 +42,6 @@ public class IngredientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Ingredient> updateIngredient(
             @PathVariable Integer id,
@@ -52,7 +53,6 @@ public class IngredientController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIngredient(@PathVariable Integer id) {
         if (!ingredientRepository.existsById(id)) {

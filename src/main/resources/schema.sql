@@ -1,5 +1,3 @@
---- Fixed Schema for Cocktail Application
--- Normalized and corrected by removing circular references and adding missing columns
 
 -- Table: ingredient
 CREATE TABLE ingredient (

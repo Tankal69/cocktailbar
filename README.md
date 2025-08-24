@@ -9,7 +9,7 @@ Use it as the starting point for your IT Crafters Graduation Project.
 
 ---
 
-## 📚 Table of Contents
+1. # 📚 **Table of Contents**
 
 - [Description](#description)
 - [Prerequisites](#prerequisites)
@@ -28,7 +28,7 @@ Use it as the starting point for your IT Crafters Graduation Project.
 
 ---
 
-## 📖 Description
+# 📖 Description
 
 This example implements basic CRUD operations for a CocktailBar:
 
@@ -164,7 +164,11 @@ cocktailbar/
 
 🗺️ Database Structure
 
-🧪 ER diagram coming soon...
+🧪 ER diagram 
+
+![ER Diagram](img.png)
+
+
 💡 Use Case Ideas
 Add IngredientController to manage ingredients
 Build a React or Flutter frontend

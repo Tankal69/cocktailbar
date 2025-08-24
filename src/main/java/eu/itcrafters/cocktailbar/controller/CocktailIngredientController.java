@@ -3,7 +3,6 @@ package eu.itcrafters.cocktailbar.controller;
 import eu.itcrafters.cocktailbar.persistence.CocktailIngredient;
 import eu.itcrafters.cocktailbar.persistence.CocktailIngredientRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,22 +12,18 @@ import java.util.List;
 @RequestMapping("/api/cocktail-ingredients")
 public class CocktailIngredientController {
 
-    @Autowired
     private CocktailIngredientRepository cocktailIngredientRepository;
 
-    // CREATE
     @PostMapping
     public ResponseEntity<CocktailIngredient> createCocktailIngredient(@Valid @RequestBody CocktailIngredient ci) {
         return ResponseEntity.ok(cocktailIngredientRepository.save(ci));
     }
 
-    // READ ALL
     @GetMapping
     public List<CocktailIngredient> getAll() {
         return cocktailIngredientRepository.findAll();
     }
 
-    // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<CocktailIngredient> getById(@PathVariable Integer id) {
         return cocktailIngredientRepository.findById(id)
@@ -36,7 +31,6 @@ public class CocktailIngredientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<CocktailIngredient> update(@PathVariable Integer id,
                                                      @Valid @RequestBody CocktailIngredient updatedCI) {
@@ -48,7 +42,6 @@ public class CocktailIngredientController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (!cocktailIngredientRepository.existsById(id)) {

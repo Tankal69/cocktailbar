@@ -3,38 +3,39 @@ package eu.itcrafters.cocktailbar.controller;
 import eu.itcrafters.cocktailbar.persistence.Cocktail;
 import eu.itcrafters.cocktailbar.persistence.CocktailRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cocktails")
 public class CocktailController {
 
-    @Autowired
     private CocktailRepository cocktailRepository;
 
-    // CREATE
     @PostMapping
-    public ResponseEntity<?> createCocktail(@Valid @RequestBody Cocktail cocktail) {
+    public ResponseEntity<Object> createCocktail(@Valid @RequestBody Cocktail cocktail) {
         if (cocktailRepository.existsByName(cocktail.getName())) {
-            return ResponseEntity
-                    .status(409) // HTTP 409 Conflict
-                    .body("Cocktail with name '" + cocktail.getName() + "' already exists.");
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Cocktail with name '" + cocktail.getName() + "' already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
-        return ResponseEntity.ok(cocktailRepository.save(cocktail));
+
+        Cocktail savedCocktail = cocktailRepository.save(cocktail);
+        URI location = URI.create("/cocktails/" + savedCocktail.getId());
+
+        return ResponseEntity.created(location).body(savedCocktail);
     }
 
-
-    // READ ALL
     @GetMapping
     public List<Cocktail> getAllCocktails() {
         return cocktailRepository.findAll();
     }
 
-    // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<Cocktail> getCocktailById(@PathVariable Integer id) {
         return cocktailRepository.findById(id)
@@ -42,7 +43,6 @@ public class CocktailController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<Cocktail> updateCocktail(
             @PathVariable Integer id,
@@ -55,7 +55,6 @@ public class CocktailController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCocktail(@PathVariable Integer id) {
         if (!cocktailRepository.existsById(id)) {
