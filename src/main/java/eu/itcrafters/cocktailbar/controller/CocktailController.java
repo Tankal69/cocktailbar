@@ -1,67 +1,65 @@
 package eu.itcrafters.cocktailbar.controller;
 
-import eu.itcrafters.cocktailbar.persistence.Cocktail;
-import eu.itcrafters.cocktailbar.persistence.CocktailRepository;
+import eu.itcrafters.cocktailbar.controller.dto.CocktailRequestDTO;
+import eu.itcrafters.cocktailbar.controller.dto.CocktailResponseDTO;
+import eu.itcrafters.cocktailbar.service.CocktailService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cocktails")
 public class CocktailController {
 
-    private CocktailRepository cocktailRepository;
+    private final CocktailService cocktailService;
+
+    public CocktailController(CocktailService cocktailService) {
+        this.cocktailService = cocktailService;
+    }
 
     @PostMapping
-    public ResponseEntity<Object> createCocktail(@Valid @RequestBody Cocktail cocktail) {
-        if (cocktailRepository.existsByName(cocktail.getName())) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Cocktail with name '" + cocktail.getName() + "' already exists.");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-        }
-
-        Cocktail savedCocktail = cocktailRepository.save(cocktail);
-        URI location = URI.create("/cocktails/" + savedCocktail.getId());
-
-        return ResponseEntity.created(location).body(savedCocktail);
+    public ResponseEntity<CocktailResponseDTO> createCocktail(@Valid @RequestBody CocktailRequestDTO dto) {
+        CocktailResponseDTO created = cocktailService.createCocktail(dto);
+        return ResponseEntity.created(URI.create("/api/cocktails/" + created.getId())).body(created);
     }
 
     @GetMapping
-    public List<Cocktail> getAllCocktails() {
-        return cocktailRepository.findAll();
+    public List<CocktailResponseDTO> getAllCocktails() {
+        return cocktailService.getAllCocktails();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cocktail> getCocktailById(@PathVariable Integer id) {
-        return cocktailRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CocktailResponseDTO> getCocktailById(@PathVariable Integer id) {
+        try {
+            CocktailResponseDTO cocktail = cocktailService.getCocktailById(id);
+            return ResponseEntity.ok(cocktail);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<Cocktail> updateCocktail(
+    public ResponseEntity<CocktailResponseDTO> updateCocktail(
             @PathVariable Integer id,
-            @Valid @RequestBody Cocktail updatedCocktail) {
-
-        return cocktailRepository.findById(id).map(cocktail -> {
-            cocktail.setName(updatedCocktail.getName());
-            cocktail.setDescription(updatedCocktail.getDescription());
-            return ResponseEntity.ok(cocktailRepository.save(cocktail));
-        }).orElse(ResponseEntity.notFound().build());
+            @Valid @RequestBody CocktailRequestDTO dto) {
+        try {
+            CocktailResponseDTO updated = cocktailService.updateCocktail(id, dto);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCocktail(@PathVariable Integer id) {
-        if (!cocktailRepository.existsById(id)) {
+        try {
+            cocktailService.deleteCocktail(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
-        cocktailRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }
 

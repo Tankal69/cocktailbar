@@ -1,9 +1,8 @@
 package eu.itcrafters.cocktailbar.controller;
 
-import eu.itcrafters.cocktailbar.persistence.CocktailIngredient;
-import eu.itcrafters.cocktailbar.persistence.CocktailIngredientRepository;
-import jakarta.validation.Valid;
-import org.springframework.http.*;
+import eu.itcrafters.cocktailbar.controller.dto.CocktailIngredientDTO;
+import eu.itcrafters.cocktailbar.service.CocktailIngredientService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,43 +11,19 @@ import java.util.List;
 @RequestMapping("/api/cocktail-ingredients")
 public class CocktailIngredientController {
 
-    private CocktailIngredientRepository cocktailIngredientRepository;
+    private final CocktailIngredientService cocktailIngredientService;
 
-    @PostMapping
-    public ResponseEntity<CocktailIngredient> createCocktailIngredient(@Valid @RequestBody CocktailIngredient ci) {
-        return ResponseEntity.ok(cocktailIngredientRepository.save(ci));
+    public CocktailIngredientController(CocktailIngredientService cocktailIngredientService) {
+        this.cocktailIngredientService = cocktailIngredientService;
     }
 
     @GetMapping
-    public List<CocktailIngredient> getAll() {
-        return cocktailIngredientRepository.findAll();
+    public ResponseEntity<List<CocktailIngredientDTO>> getAll() {
+        return ResponseEntity.ok(cocktailIngredientService.getAllCocktailIngredients());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CocktailIngredient> getById(@PathVariable Integer id) {
-        return cocktailIngredientRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CocktailIngredient> update(@PathVariable Integer id,
-                                                     @Valid @RequestBody CocktailIngredient updatedCI) {
-        return cocktailIngredientRepository.findById(id).map(existing -> {
-            existing.setCocktail(updatedCI.getCocktail());
-            existing.setIngredient(updatedCI.getIngredient());
-            existing.setQuantity(updatedCI.getQuantity());
-            return ResponseEntity.ok(cocktailIngredientRepository.save(existing));
-        }).orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (!cocktailIngredientRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        cocktailIngredientRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/cocktail/{cocktailId}")
+    public ResponseEntity<List<CocktailIngredientDTO>> getByCocktailId(@PathVariable Integer cocktailId) {
+        return ResponseEntity.ok(cocktailIngredientService.getIngredientsByCocktailId(cocktailId));
     }
 }
-
