@@ -49,6 +49,12 @@ You'll see how layers connect, how to externalize SQL scripts (`schema.sql`, `da
 - Gradle (or use the included `gradlew`)
 - IntelliJ IDEA (optional, but recommended)
 
+🗺️ Database Structure
+
+🧪 ER diagram
+
+- ![ER Diagram](img.png)
+  ![img_1.png](img_1.png
 ---
 
 ## 🚀 Getting Started
@@ -144,13 +150,6 @@ cocktailbar/
 ├── .gitignore                         # Git ignore rules
 ├── .gitattributes                     # Git attributes
 └── HELP.md                            # Spring references and links
-
-🗺️ Database Structure
-
-🧪 ER diagram 
-
-![ER Diagram](img.png)
-
 
 💡 Use Case Ideas
 Add IngredientController to manage ingredients
